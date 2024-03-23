@@ -18,9 +18,11 @@ def main():
     lastPage = page_numbers_list[-1].getText()
     
     #Main loop
-    for _ in range(2,lastPage):
+    
+    pageParse(1)
+    """for _ in range(2,lastPage):
         #something append list
-        print("yes")
+        print("yes")"""
     return
 
 def pageParse(pageNumber:int):
@@ -29,6 +31,8 @@ def pageParse(pageNumber:int):
     #Try request
     soup = fetchPage(link)
     
+    result = soup.find_all("div", {"class": "info", "data-type": "magic-items"})
+    print(result[0].find("a"))
     
     return
 
@@ -45,3 +49,12 @@ def fetchPage(link:str):
     
 if __name__ == "__main__":
     main()
+    
+    
+[]
+#List of magic items
+#Name
+#Rarity
+#Type
+#Attunement
+#Source Book
