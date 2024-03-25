@@ -1,14 +1,17 @@
+"""imports"""
 import json
 import time
 import requests
 from bs4 import BeautifulSoup
 
+#  Globals
 MAIN_LINK = "https://www.dndbeyond.com/magic-items?filter-partnered-content="
 PAGES_LINK = "https://www.dndbeyond.com/magic-items?filter-partnered-content=&page="
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0"
-HEADERS = {'User-Agent': USER_AGENT,
-            "Accept-Language": "en-US,en;q=0.9,en-AU;q=0.8",
-           }
+HEADERS = {
+    "User-Agent": USER_AGENT,
+    "Accept-Language": "en-US,en;q=0.9,en-AU;q=0.8",
+}
 PROXIES = {
     'http': 'http://208.111.40.72:80',
     'https': 'http://208.111.40.72:80',
@@ -18,13 +21,8 @@ SEARCH_FILTERS = {
     "page_list": {"class": "b-pagination-list paging-list j-tablesorter-pager j-listing-pagination"},
     "page_list_links": {"class": "b-pagination-item"},
 }
+
 MAGIC_ITEMS = []
-# Dict of magic items
-# Name/id
-#   Rarity
-#   Type
-#   Attunement
-#   Source Book
 
 
 def main():
@@ -42,11 +40,11 @@ def main():
             for pageNumber in range(1, lastPage+1):
                 print(f"Parsing page: {pageNumber}")
                 pageParse(pageNumber)
-                time.sleep(6) # Time delay
+                time.sleep(6)  # Time delay
 
         else:
             pageParse(1)
-            
+
         json.dump(MAGIC_ITEMS, file, indent=2)
 
 
@@ -55,7 +53,7 @@ def pageParse(pageNumber: int):
     # Build link with page number input
     link = PAGES_LINK + str(pageNumber)
     soup = fetchPage(link)
-    
+
     # The List
     itemList = soup.find_all("div", {"class": "info", "data-type": "magic-items"})
 
@@ -94,8 +92,6 @@ def fetchPage(link: str):
 
     # Check if Robot
     if page.status_code == 403:
-        with open("myfile.html", "w", encoding="utf-8") as f:
-            f.write(str(page.content))
         raise ConnectionError("403 Error: Site has denied access; Suspicious behaviour")
 
     soup = BeautifulSoup(page.content, 'html.parser')
