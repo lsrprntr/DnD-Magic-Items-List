@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 from bs4 import BeautifulSoup
 
 MAIN_LINK = "https://www.dndbeyond.com/magic-items?filter-partnered-content="
@@ -8,6 +8,11 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 HEADERS = {'User-Agent': USER_AGENT,
            "Accept-Language": "en-US,en;q=0.9,en-AU;q=0.8",
            }
+PROXIES = {
+    'http': 'http://41.216.183.18:8080',
+    'https': 'http://41.216.183.18:8080',
+}
+
 SEARCH_FILTERS = {
     "page_list": {"class": "b-pagination-list paging-list j-tablesorter-pager j-listing-pagination"},
     "page_list_links": {"class": "b-pagination-item"},
@@ -36,19 +41,21 @@ def main():
         for pageNumber in range(1, lastPage+1):
             print(f"Parsing page: {pageNumber}")
             pageParse(pageNumber)
+            break
     else:
         pageParse(1)
 
     with open(file='magic_items.json', mode='w', encoding="utf-8") as file:
-        json.dump(MAGIC_ITEMS, file)
+        json.dump(MAGIC_ITEMS, file, indent=2)
 
 
 def pageParse(pageNumber: int):
     """Parses list of items on page and adds to global list"""
     # Build link with page number input
     link = PAGES_LINK + str(pageNumber)
+    #test = "https://www.dndbeyond.com/magic-items?filter-type=0&filter-search=spider+staff&filter-requires-attunement=&filter-effect-type=&filter-effect-subtype=&filter-has-charges=&filter-partnered-content="
     soup = fetchPage(link)
-
+    
     # The List
     itemList = soup.find_all("div", {"class": "info", "data-type": "magic-items"})
 
@@ -57,7 +64,11 @@ def pageParse(pageNumber: int):
         href = item.find_all("a", {"class": "link"})[-1]["href"].split("/magic-items/")[-1]
         itemID = href.split("-")[0]
         name = item.find("span", {"class": "name"}).get_text().strip()
-        name = name.lstrip("Partnered Content").split("\n")[0]
+        # Check partnered content and legacy
+        if "Partnered Content" in name:
+            name = name.split("\n\n")[-1]
+        if "Legacy" in name:
+            name = name.split("\n\n\n\n")[0] + " (Legacy)"
         rarity = item.find("span", {"class": "rarity"}).get_text().strip()
         itemType = item.find("span", {"class": "type"}).get_text().strip()
 
@@ -76,10 +87,19 @@ def fetchPage(link: str):
     '''Returns a BeautifulSoup object of link provided'''
     try:
         page = requests.get(link, headers=HEADERS, timeout=10)
+        print(page.status_code)
     except requests.HTTPError as e:
         print("HTTPError: Requesting Page Failed: " + link)
+        print(page.status_code)
         raise e
-    return BeautifulSoup(page.content, 'html.parser')
+
+    # Check if Robot
+    if page.status_code == 403:
+        raise ConnectionError("403 Error: Site has denied access; Suspicious behaviour")
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+    page.close()
+    return soup
 
 
 if __name__ == "__main__":
