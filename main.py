@@ -16,7 +16,6 @@ PROXIES = {
 SEARCH_FILTERS = {
     "page_list": {"class": "b-pagination-list paging-list j-tablesorter-pager j-listing-pagination"},
     "page_list_links": {"class": "b-pagination-item"},
-    
 }
 MAGIC_ITEMS = []
 # Dict of magic items
@@ -46,6 +45,7 @@ def main():
         else:
             pageParse(1)
             json.dump(MAGIC_ITEMS, file, indent=2)
+
 
 def pageParse(pageNumber: int):
     """Parses list of items on page and adds to global list"""
