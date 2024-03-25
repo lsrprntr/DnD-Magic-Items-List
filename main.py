@@ -47,9 +47,6 @@ def main():
             pageParse(1)
             json.dump(MAGIC_ITEMS, file, indent=2)
 
-
-
-
 def pageParse(pageNumber: int):
     """Parses list of items on page and adds to global list"""
     # Build link with page number input
