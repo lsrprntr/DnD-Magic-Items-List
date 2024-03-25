@@ -1,4 +1,5 @@
 import json
+import time
 import requests
 from bs4 import BeautifulSoup
 
@@ -42,6 +43,8 @@ def main():
                 print(f"Parsing page: {pageNumber}")
                 pageParse(pageNumber)
                 json.dump(MAGIC_ITEMS, file, indent=2)
+                time.sleep(6) # Time delay
+
         else:
             pageParse(1)
             json.dump(MAGIC_ITEMS, file, indent=2)
