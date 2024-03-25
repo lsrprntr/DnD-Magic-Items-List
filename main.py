@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 MAIN_LINK = "https://www.dndbeyond.com/magic-items?filter-partnered-content="
 PAGES_LINK = "https://www.dndbeyond.com/magic-items?filter-partnered-content=&page="
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0"
 HEADERS = {'User-Agent': USER_AGENT, "Accept-Language": "en-US, en;q=0.5"}
 SEARCH_FILTERS = {"class": "b-pagination-list paging-list j-tablesorter-pager j-listing-pagination"}
 
@@ -51,7 +51,8 @@ def pageParse(pageNumber: int):
         href = item.find_all("a", {"class": "link"})[-1]["href"].split("/magic-items/")[-1]
         print(href)
         itemID = href.split("-")[0]
-        name = item.find("span", {"class": "name"}).get_text().strip().lstrip("Partnered Content").rstrip("\n\n\n\n").strip()
+        name = item.find("span", {"class": "name"}).get_text().strip()
+        name = name.lstrip("Partnered Content").rstrip("\n\n\n\n").strip()
         print(name)
         rarity = item.find("span", {"class": "rarity"}).get_text().strip()
         itemType = item.find("span", {"class": "type"}).get_text().strip()
