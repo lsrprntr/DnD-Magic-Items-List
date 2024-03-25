@@ -1,5 +1,5 @@
 <a name="readme-top"></a>
-# D&D Magic List
+# D&D Magic Items List
 
 This scrapes all magic items from the D&D Beyond Magic Items pages and outputs it into a JSON.
 
