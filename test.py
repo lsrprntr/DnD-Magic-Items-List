@@ -1,9 +1,22 @@
+'''imports'''
+import json
 import requests
-from main import HEADERS,PROXIES
+import pytest
+from main import HEADERS, PROXIES
+from main import fetchPage, pageParse
 
-test = "https://www.dndbeyond.com/magic-items?filter-type=0&filter-search=circlet&filter-requires-attunement=&filter-effect-type=&filter-effect-subtype=&filter-has-charges=&filter-partnered-content=t"
-test2 = "https://www.dndbeyond.com/magic-items?filter-type=0&filter-search=spider+staff&filter-requires-attunement=&filter-effect-type=&filter-effect-subtype=&filter-has-charges=&filter-partnered-content="
-page = requests.get(test, headers=HEADERS, timeout=10)
+TEST_LINKS = [
+    "https://www.dndbeyond.com/magic-items?filter-type=0&filter-search=Dragonguard+&filter-requires-attunement=&filter-effect-type=&filter-effect-subtype=&filter-has-charges=&filter-partnered-content=f",
+    "https://www.dndbeyond.com/magic-items?filter-type=0&filter-search=Agony&filter-requires-attunement=&filter-effect-type=&filter-effect-subtype=&filter-has-charges=&filter-partnered-content=t",
+    
+]
+
+def test():
+    for link in TEST_LINKS:
+        soup = fetchPage(link)
+        
+    
+
 
 print(page.status_code)
 print(page.close)

@@ -57,7 +57,7 @@ def pageParse(pageNumber: int):
     # The List
     itemList = soup.find_all("div", {"class": "info", "data-type": "magic-items"})
 
-    # The Split Parse per item
+    # The Split Parse per item loop
     for item in itemList:
         href = item.find_all("a", {"class": "link"})[-1]["href"].split("/magic-items/")[-1]
         itemID = href.split("-")[0]
