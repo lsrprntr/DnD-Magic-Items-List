@@ -45,9 +45,9 @@ def main():
                 json.dump(MAGIC_ITEMS, file, indent=2)
         else:
             pageParse(1)
+            json.dump(MAGIC_ITEMS, file, indent=2)
 
-    
-        json.dump(MAGIC_ITEMS, file, indent=2)
+
 
 
 def pageParse(pageNumber: int):
