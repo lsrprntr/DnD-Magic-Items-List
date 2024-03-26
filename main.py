@@ -45,6 +45,7 @@ def main():
         else:
             pageParse(1)
 
+        print("Dumping into JSON")
         json.dump(MAGIC_ITEMS, file, indent=2)
 
 
@@ -92,7 +93,10 @@ def fetchPage(link: str):
 
     # Check if Robot
     if page.status_code == 403:
-        raise ConnectionError("403 Error: Site has denied access; Suspicious behaviour")
+        with open(file='incomplete_magic_items.json', mode='w', encoding="utf-8") as file:
+            print("Dumping into JSON")
+            json.dump(MAGIC_ITEMS, file, indent=2)
+        raise ConnectionError("403 Error: Site has denied access")
 
     soup = BeautifulSoup(page.content, 'html.parser')
     page.close()
