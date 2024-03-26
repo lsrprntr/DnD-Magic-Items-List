@@ -15,6 +15,5 @@ def test():
         soup = fetchPage(link)
 
 
-
 print(page.status_code)
 print(page.close)
